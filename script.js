@@ -1,5 +1,6 @@
 const inputElement = document.querySelector(".new-task-input");
 const addTaskButton = document.querySelector(".new-task-Button");
+const taskContainer = document.querySelector(".task-container")
 
 const validateInput = () => inputElement.value.trim().length > 0;
 // if(inputElement.value.trim().length > 0) {
@@ -16,6 +17,22 @@ const handleAddTask = () => {
     if(!insValidInput){
       return  inputElement.classList.add("error")
     }
+
+    const taskItemContainer = document.createElement("div")
+    taskItemContainer.classList.add("task-item")
+
+    const taskContent = document.createElement("p")
+    taskContent.innerText = inputElement.value
+
+    const deleteItem = document.createElement("i")
+    deleteItem.classList.add("fa-solid")
+    deleteItem.classList.add("fa-trash-can")
+
+    taskItemContainer.append(taskContent,deleteItem)
+
+    taskContainer.appendChild(taskItemContainer)
+
+    inputElement.value = ""
 }
 
 const handleInputChange = () => {
