@@ -19,30 +19,32 @@ const handleAddTask = () => {
     }
 
     const taskItemContainer = document.createElement("div")
-    taskItemContainer.classList.add("task-item")
+        taskItemContainer.classList.add("task-item")
+    
+        const taskContent = document.createElement("p")
+        taskContent.innerText = inputElement.value
 
-    const taskContent = document.createElement("p")
-    taskContent.innerText = inputElement.value
-
-    taskContent.addEventListener("click", (e) => {
-        e.preventDefault()
-         handleClick(taskContent)
-    })
-
-    const deleteItem = document.createElement("i")
-    deleteItem.classList.add("fa-solid")
-    deleteItem.classList.add("fa-trash-can")
-
-    deleteItem.addEventListener("click", (e) => {
-        e.preventDefault()
-         handleDeleteClick(taskItemContainer, taskContent)
-    })
-
-    taskItemContainer.append(taskContent,deleteItem)
-
-    taskContainer.appendChild(taskItemContainer)
-
+    
+        taskContent.addEventListener("click", (e) => {
+            e.preventDefault()
+             handleClick(taskContent)
+        })
+    
+        const deleteItem = document.createElement("i")
+        deleteItem.classList.add("fa-solid")
+        deleteItem.classList.add("fa-trash-can")
+    
+        deleteItem.addEventListener("click", (e) => {
+            e.preventDefault()
+             handleDeleteClick(taskItemContainer, taskContent)
+        })
+    
+        taskItemContainer.append(taskContent,deleteItem)
+    
+        taskContainer.appendChild(taskItemContainer)
     inputElement.value = ""
+
+    updateLocalStorage()
 }
 
 const handleInputChange = () => {
@@ -62,7 +64,7 @@ const handleClick = (taskContent) => {
             task.firstChild.classList.toggle("completed")
         }
     }
-  
+    updateLocalStorage()
 }
 
 const handleDeleteClick = (taskItemContainer, taskContent) => {
@@ -74,7 +76,57 @@ const handleDeleteClick = (taskItemContainer, taskContent) => {
             taskItemContainer.remove()
         }
     }
+    updateLocalStorage()
 }
+
+const updateLocalStorage = () => {
+    const tasks = taskContainer.childNodes
+
+    const localStorageTask = [...tasks].map((task) => {
+        const content = task.firstChild
+        const isCompleted = content.classList.contains("completed")
+
+        return {description: content.innerText, isCompleted: isCompleted}
+    })
+
+    localStorage.setItem("tasks", JSON.stringify(localStorageTask))
+}
+
+const refreshTaskUsingLocalStorage = () => {
+    const tasksFromLocalStorage = JSON.parse(localStorage.getItem("tasks"))
+
+    for(const task of tasksFromLocalStorage){
+        const taskItemContainer = document.createElement("div")
+        taskItemContainer.classList.add("task-item")
+    
+        const taskContent = document.createElement("p")
+        taskContent.innerText = task.description
+
+        if(task.isCompleted){
+            taskContent.classList.add("completed")
+        }
+    
+        taskContent.addEventListener("click", (e) => {
+            e.preventDefault()
+             handleClick(taskContent)
+        })
+    
+        const deleteItem = document.createElement("i")
+        deleteItem.classList.add("fa-solid")
+        deleteItem.classList.add("fa-trash-can")
+    
+        deleteItem.addEventListener("click", (e) => {
+            e.preventDefault()
+             handleDeleteClick(taskItemContainer, taskContent)
+        })
+    
+        taskItemContainer.append(taskContent,deleteItem)
+    
+        taskContainer.appendChild(taskItemContainer)
+    }
+}
+
+refreshTaskUsingLocalStorage()
 
 inputElement.addEventListener("change", () => handleInputChange())
 
