@@ -24,9 +24,19 @@ const handleAddTask = () => {
     const taskContent = document.createElement("p")
     taskContent.innerText = inputElement.value
 
+    taskContent.addEventListener("click", (e) => {
+        e.preventDefault()
+         handleClick(taskContent)
+    })
+
     const deleteItem = document.createElement("i")
     deleteItem.classList.add("fa-solid")
     deleteItem.classList.add("fa-trash-can")
+
+    deleteItem.addEventListener("click", (e) => {
+        e.preventDefault()
+         handleDeleteClick(taskItemContainer, taskContent)
+    })
 
     taskItemContainer.append(taskContent,deleteItem)
 
@@ -40,6 +50,29 @@ const handleInputChange = () => {
 
     if(inputIsValid) {
         return inputElement.classList.remove("error")
+    }
+}
+
+const handleClick = (taskContent) => {
+    const tasks = taskContainer.childNodes
+    
+    for (const task of tasks) {
+        const currentTaskIsBeingClicked = task.firstChild.isSameNode(taskContent)
+        if (currentTaskIsBeingClicked){
+            task.firstChild.classList.toggle("completed")
+        }
+    }
+  
+}
+
+const handleDeleteClick = (taskItemContainer, taskContent) => {
+    const tasks = taskContainer.childNodes
+
+    for (const task of tasks) {
+        const currentTaskIsBeingClicked = task.firstChild.isSameNode(taskContent)
+        if (currentTaskIsBeingClicked){
+            taskItemContainer.remove()
+        }
     }
 }
 

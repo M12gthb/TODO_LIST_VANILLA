@@ -79,6 +79,9 @@ body{
     border-radius: 5px;
 }
 
+.completed{
+    text-decoration: line-through;
+}
 /* Utilites - Classes reutilizaveis */
 
 .error{
